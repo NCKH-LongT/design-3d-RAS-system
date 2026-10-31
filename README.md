@@ -36,6 +36,16 @@ npm run preview
 
 Build tĩnh nằm trong `dist/`. Không cần backend, database hoặc API key. Font Be Vietnam Pro tải từ Google Fonts; có font hệ thống dự phòng.
 
+## Triển khai GitHub Pages
+
+Workflow `.github/workflows/pages.yml` kiểm thử, build và deploy từ nhánh `main`. Trong Settings → Pages, chọn Source là **GitHub Actions**. Workflow đặt `GITHUB_PAGES=true` để build đúng base `/design-3d-RAS-system/`; các nền tảng khác vẫn dùng `/`.
+
+```bash
+GITHUB_PAGES=true npm run build
+```
+
+Địa chỉ dự kiến: `https://nckh-longt.github.io/design-3d-RAS-system/` (chỉ hoạt động sau khi deployment thành công).
+
 ## Triển khai Vercel
 
 Repository đã có `vercel.json`:
