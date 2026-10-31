@@ -139,3 +139,10 @@ GitHub Pages dùng `.github/workflows/pages.yml`, nhánh `main`, `GITHUB_PAGES=t
 - 3D WebGL: vật liệu, ánh sáng, đáy bể, gợn nước, bong bóng ở bể có kết nối khí trực tiếp và dấu dòng chảy trên tuyến đang mở. Chuyển động chỉ minh họa, không xác nhận bơm đang chạy hoặc biểu diễn lưu lượng tính toán.
 - 3D tương thích: dòng chảy và gợn nước SVG; tôn trọng cài đặt giảm chuyển động.
 - Cột phải cuộn độc lập, có Mở tất cả/Thu gọn; trên màn hình nhỏ chuyển thành ngăn nổi bên phải thay vì dồn xuống dưới viewer.
+
+### Nâng / hạ đầu ống trực tiếp trong 3D
+1. Mở **Xem 3D**, chọn đường ống bằng danh sách phía trên hoặc nhấn tuyến ống.
+2. Kéo tay nắm **A** hoặc **B** lên/xuống. Số m là độ cao tính từ đáy thiết bị, không phải cao độ tuyệt đối.
+3. Dùng ↑/↓ để tăng/giảm 1 cm, Shift + ↑/↓ để chỉnh 10 cm. Thông số số học vẫn chỉnh được bên phải.
+4. Độ dốc/chiều dài/tính toán cập nhật ngay; thả tay để lưu, Ctrl+Z hoàn tác cả lần kéo. Escape hoặc hủy con trỏ trả lại giá trị đầu lần kéo.
+Hỗ trợ WebGL và SVG tương thích; tay nắm giữ vị trí trên đầu ống khi xoay góc nhìn. Giới hạn cao độ tương đối 0–100 m giống trường nhập số; người dùng cần kiểm tra vị trí cửa so với thành bể.
