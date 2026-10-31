@@ -1,3 +1,4 @@
+import {standpipe,intakeElevation,overflowCapacity} from './standpipe.js';
 import {endHeights,pipeLength} from './model.js';
 import {headLoss} from './hydraulic-loss.js';
 export const G=9.80665,RHO=1000;
@@ -12,13 +13,14 @@ export function passiveFlow(p,e,levels){
  if(e.mode==='air')return result(e,0,0,'air','Đường khí: không áp dụng công thức nước.');
  if(!e.open)return result(e,0,0,'closed','Van đóng: không có dòng nước.');
  if(!isReservoir(a)||(!isReservoir(b)&&e.mode!=='waste'))return result(e,0,0,'unsupported','Chưa giải được tuyến này: cần hai bể nước hoặc tuyến bơm nối tiếp.');
- const heights=endHeights(p,e),ha=level(a,levels),hb=level(b,levels),forward=ha>heights.from+1e-7?ha-Math.max(e.mode==='waste'?heights.to:hb,heights.to):0;
+ const wallHeights=endHeights(p,e),spA=standpipe(p,e,'from'),spB=standpipe(p,e,'to');if([spA,spB].some(s=>s&&!s.valid))return result(e,0,0,'unsupported','Ống đứng không hợp lệ: miệng phải trên cửa nối và dưới mép thùng.');
+ const heights={from:intakeElevation(p,e,'from',wallHeights.from),to:intakeElevation(p,e,'to',wallHeights.to)},ha=level(a,levels),hb=level(b,levels),forward=ha>heights.from+1e-7?ha-Math.max(e.mode==='waste'?heights.to:hb,heights.to):0;
  const backward=e.mode!=='waste'&&hb>heights.to+1e-7?hb-Math.max(ha,heights.from):0;
  let dh=0,sign=0;if(forward>1e-7){dh=forward;sign=1;}else if(backward>1e-7){dh=backward;sign=-1;}
  const extra={surfaceA:ha,surfaceB:hb,outletA:heights.from,outletB:heights.to};
- if(!sign){const dry=ha<=heights.from+1e-7&&(e.mode==='waste'||hb<=heights.to+1e-7),equal=Math.abs(ha-hb)<1e-7;return result(e,0,0,'stopped',dry?'Cửa hút hở: mực nước không ngập cửa ở phía cấp nước.':equal&&e.mode!=='waste'?'Hai mặt nước cùng cột áp: độ dốc ống không tự tạo dòng chảy.':'Không đủ cột áp để vượt cao độ cửa nhận; không giả định siphon.',extra);}
- const submergence=sign>0?ha-heights.from:hb-heights.to;if(submergence<e.diameter/2000)return result(e,0,dh,'unsupported','Cửa cấp chưa ngập đủ tiết diện ống: có thể chảy không đầy; chưa tính Q trong mô hình ống đầy.',extra);
- const q=solveLoss(dh,[e],p)*sign;return result(e,q,dh,sign<0?'reverse':'flow',sign<0?'Cột áp phía B lớn hơn: nước chảy B → A, ngược chiều nối.':'Cột áp phía A đủ thắng tổn thất: nước chảy A → B.',extra);
+ if(!sign){const dry=ha<=heights.from+1e-7&&(e.mode==='waste'||hb<=heights.to+1e-7),equal=Math.abs(ha-hb)<1e-7;return result(e,0,0,'stopped',((spA&&ha<=spA.crest+1e-7&&hb<=spA.crest)||(spB&&hb<=spB.crest+1e-7&&ha<=spB.crest))?'Nước chưa vượt miệng ống đứng: tuyến này giữ mức nước tại cao độ miệng.':dry?(spA||spB?'Nước chưa vượt miệng ống đứng: tuyến này giữ mức nước tại cao độ miệng.':'Cửa hút hở: mực nước không ngập cửa ở phía cấp nước.'):equal&&e.mode!=='waste'?'Hai mặt nước cùng cột áp: độ dốc ống không tự tạo dòng chảy.':'Không đủ cột áp để vượt cao độ cửa nhận; không giả định siphon.',extra);}
+ const submergence=sign>0?ha-heights.from:hb-heights.to;if(!(sign>0?spA:spB)&&submergence<e.diameter/2000)return result(e,0,dh,'unsupported','Cửa cấp chưa ngập đủ tiết diện ống: có thể chảy không đầy; chưa tính Q trong mô hình ống đầy.',extra);
+ const sourceStandpipe=sign>0?spA:spB,pipeQ=solveLoss(dh,[e],p),q=(sourceStandpipe?Math.min(pipeQ,overflowCapacity(e.diameter,submergence)):pipeQ)*sign;return result(e,q,dh,sign<0?'reverse':'flow',sign<0?'Cột áp phía B lớn hơn: nước chảy B → A, ngược chiều nối.':(sourceStandpipe?'Nước vượt miệng ống đứng: Q giới hạn bởi tràn qua miệng và năng lực đường ống.':'Cột áp phía A đủ thắng tổn thất: nước chảy A → B.'),extra);
 }
 export function findPumpCircuit(p){
  const pumps=p.nodes.filter(n=>n.type==='pump');if(pumps.length!==1)return{supported:false,reason:'Cần đúng một bơm; chưa hỗ trợ nhiều bơm.'};
