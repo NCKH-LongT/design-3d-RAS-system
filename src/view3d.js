@@ -1,3 +1,4 @@
+import {standpipe,standpipePath} from './standpipe.js';
 import {analyzeHydraulics} from './hydraulics.js';
 import {createPipeHeightControls} from './pipe-height-controls.js';
 import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{TYPES,route3D}from'./model.js';
@@ -26,6 +27,7 @@ export function create3D(root,onSelect,onEdit){
 
  label(n.label,n.x,n.z+n.h+.35,n.y);
  }
+ for(const e of p.edges)for(const end of ['from','to']){const sp=standpipe(p,e,end);if(!sp)continue;const pts=standpipePath(p,e,end).map(v=>new THREE.Vector3(v.x,v.z,v.y)),curve=new THREE.CurvePath();for(let i=1;i<pts.length;i++)if(pts[i].distanceTo(pts[i-1])>.0001)curve.add(new THREE.LineCurve3(pts[i-1],pts[i]));if(curve.curves.length){const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,24,e.diameter/2000,12,false),mat('#e4ac45',{metalness:.35}));tube.userData.id=e.id;group.add(tube);}const lip=pts.at(-1);const rim=new THREE.Mesh(new THREE.TorusGeometry(e.diameter/2000,.009,8,32),mat('#ffdc81'));rim.rotation.x=Math.PI/2;rim.position.copy(lip);rim.userData.id=e.id;group.add(rim);label('Ống đứng '+sp.height.toFixed(2)+' m',lip.x,lip.y+.2,lip.z);}
  for(const e of p.edges){const flow=hydraulic.edges.find(f=>f.id===e.id);const color=flow.state==='reverse'?'#c26b4b':flow.state==='stopped'?'#c8a765':flow.state==='unsupported'?'#999e9d':!e.open?'#c3c9bb':e.mode==='pressure'?'#507fae':e.mode==='air'?'#ab94bc':e.mode==='waste'?'#a5796a':'#4d9698';const verts=route3D(p,e).map(v=>new THREE.Vector3(v.x,v.z,v.y));const tube=new THREE.CurvePath();for(let i=1;i<verts.length;i++){if(verts[i].distanceTo(verts[i-1])>.001)tube.add(new THREE.LineCurve3(verts[i-1],verts[i]));}if(tube.curves.length){const o=new THREE.Mesh(new THREE.TubeGeometry(tube,40,Math.max(.015,e.diameter/2000),8,false),mat(color));o.userData.id=e.id;group.add(o);
  if(Math.abs(flow.q)>1e-7){const count=Math.min(20,Math.max(3,Math.ceil(tube.getLength()*2)));for(let i=0;i<count;i++){const dot=new THREE.Mesh(new THREE.SphereGeometry(Math.max(.02,e.diameter/1800),8,6),mat(e.mode==='air'?'#eee0ff':'#c5fff3',{emissive:e.mode==='air'?'#b98ed3':'#4ddbc1',emissiveIntensity:.7}));group.add(dot);animated.push({kind:'flow',mesh:dot,path:tube,phase:i/count,speed:flow.velocity/Math.max(.001,tube.getLength())*flow.direction});}}
  }}
