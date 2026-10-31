@@ -78,3 +78,11 @@
 - [x] Kiểm thử số: cùng cột áp, đảo dòng, đổi D/H/K/L, cân bằng năng lượng, cửa hở/chưa ngập đủ, bơm và bảo toàn khối lượng.
 - [x] QA SVG: tuyến drum → vi sinh báo B → A 32,814 m³/h; nâng cửa B lên 1,21 m làm Q=0 và ngừng animation tuyến đó.
 - [ ] Hiệu chuẩn thực nghiệm Q và tổn thất thiết bị; giải chảy không đầy/siphon/T có áp ở phiên bản sau.
+
+- [x] Module ống đứng hở tại từng đầu ống tự chảy/xả, nhập số và kéo miệng trong 3D.
+- [x] Ngưỡng giữ nước, giới hạn tràn qua miệng, chiều dài trong thùng và dòng ngược được đưa vào bộ tính/mô phỏng.
+- [x] Kiểm tra mô phỏng không rút dưới miệng qua tuyến đã bảo vệ và bảo toàn lượng nước.
+- [x] Giữ namespace/schema tài khoản cũ; ghim backend và chẩn đoán dữ liệu trình duyệt; nhớ tên đăng nhập.
+- [x] Sao lưu/khôi phục tài khoản cùng mô hình mã hóa, đúng mật khẩu, chống ghi đè và kiểm tra bản sao hỏng.
+- [x] QA SVG: bật ống đứng 0,80 m → Q=0; kéo miệng xuống 0,58 m → Q khoảng 12,818 m³/h, mực nước bể giữ nguyên 0,80 m.
+- [ ] Kiểm tra WebGL trên thiết bị thật và hiệu chuẩn hệ số tràn miệng ống thực.
