@@ -69,3 +69,12 @@
 - [x] Cao độ, độ dốc và chiều dài cập nhật ngay; lưu khi thả và hoàn tác một lần kéo.
 - [x] Kiểm tra trình duyệt SVG: kéo A từ 0,40 lên 1,32 m, Ctrl+Z trả về 0,40 m; đầu B chỉnh được bằng bàn phím.
 - [ ] Kiểm tra tay nắm WebGL trên thiết bị thật (QA không hỗ trợ WebGL).
+
+- [x] Tính Q có dấu theo cột áp mực nước/cửa ống, đường kính, chiều dài, K và bơm; không ép theo chiều nối.
+- [x] Dùng chung thủy lực cho tính toán, 2D/3D và mô phỏng cân bằng nước.
+- [x] Bảng Thủy lực và cảnh báo dòng ngược/ngừng/thiếu dữ liệu; cân bằng nước vào/ra theo bể.
+- [x] Hiển thị Q/v/ΔH/áp suất/động lượng/công suất và phạm vi áp dụng.
+- [x] Chặn kết luận/sức tải đầy đủ khi thủy lực có vấn đề hoặc chưa cân bằng.
+- [x] Kiểm thử số: cùng cột áp, đảo dòng, đổi D/H/K/L, cân bằng năng lượng, cửa hở/chưa ngập đủ, bơm và bảo toàn khối lượng.
+- [x] QA SVG: tuyến drum → vi sinh báo B → A 32,814 m³/h; nâng cửa B lên 1,21 m làm Q=0 và ngừng animation tuyến đó.
+- [ ] Hiệu chuẩn thực nghiệm Q và tổn thất thiết bị; giải chảy không đầy/siphon/T có áp ở phiên bản sau.
