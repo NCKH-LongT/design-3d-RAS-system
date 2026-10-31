@@ -1,5 +1,7 @@
 # RAS Studio
 
+**Demo:** https://nckh-longt.github.io/design-3d-RAS-system/
+
 Ứng dụng web tiếng Việt để bố trí hệ nuôi cá tuần hoàn (RAS), chỉnh thiết bị/đường ống và sàng lọc các giới hạn vận hành. Mặt bằng 2D, hai chế độ xem 3D và bộ tính dùng chung một dự án JSON.
 
 ![Giao diện RAS Studio](docs/preview.jpg)
@@ -44,7 +46,7 @@ Workflow `.github/workflows/pages.yml` kiểm thử, build và deploy từ nhán
 GITHUB_PAGES=true npm run build
 ```
 
-Địa chỉ dự kiến: `https://nckh-longt.github.io/design-3d-RAS-system/` (chỉ hoạt động sau khi deployment thành công).
+Đã deploy và xác minh giao diện 2D/3D tại [demo GitHub Pages](https://nckh-longt.github.io/design-3d-RAS-system/). Push lên `main` sẽ tự cập nhật demo sau khi workflow thành công.
 
 ## Triển khai Vercel
 
@@ -59,7 +61,7 @@ Repository đã có `vercel.json`:
 
 Import repository `NCKH-LongT/design-3d-RAS-system` trong tài khoản/team Vercel mong muốn, chọn nhánh `main` và Deploy. Có thể chạy `vercel --prod` trong checkout đã được xác thực. Không đưa token Vercel vào source hoặc `vercel.json`.
 
-**Trạng thái triển khai:** chưa xác minh URL production; xem [checklist.md](checklist.md). Không coi bản preview hoặc build thành công là deployment production.
+**Trạng thái:** demo hiện chạy trên GitHub Pages; chưa triển khai Vercel. Xem [checklist.md](checklist.md).
 
 ## Hướng dẫn nhanh
 

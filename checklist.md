@@ -17,8 +17,9 @@
 - [x] Kiểm thử công thức, dữ liệu nhập và build production tại máy phát triển.
 - [x] Kiểm thử trình duyệt: sửa bể, kéo bể, thêm lọc, nối ống, đổi cỡ, đóng van, xem phân tích, undo, JSON/CSV và 3D dự phòng.
 - [ ] Xác minh trực quan WebGL 3D trên trình duyệt có GPU (môi trường kiểm thử hiện tắt WebGL).
-- [ ] Xác minh URL Vercel production sau deployment.
-  - Kết nối hiện chưa được cấp quyền vào team `longtruongs-projects` (Vercel trả 403); cần chủ tài khoản chấp thuận quyền team.
+- [x] Deploy GitHub Pages bằng GitHub Actions; sửa base Vite theo đường dẫn repository.
+- [x] Xác minh demo công khai, tải 2D và mô-đun 3D: https://nckh-longt.github.io/design-3d-RAS-system/
+- Vercel không triển khai; theo yêu cầu mới, dùng GitHub Pages.
 
 ## Các bước mở rộng, chưa nằm trong bản 1.0
 
