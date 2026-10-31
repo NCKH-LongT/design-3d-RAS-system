@@ -1,4 +1,4 @@
-# Checklist RAS Studio
+# Checklist Liêm RAS Studio
 
 ## Bản 1.0
 
@@ -58,3 +58,9 @@
 - [ ] Hiệu chỉnh/kiểm chứng hệ số theo dữ liệu đo, loài cá, nhiệt độ, pH và độ mặn.
 - [ ] NH₃ độc, NO₂/NO₃, CO₂, tắc lọc, dự phòng oxy và thời gian sống khi sự cố.
 - [ ] CAD co T, co góc, van, thu cỡ độc lập; bản vẽ thi công và xuất báo cáo PDF.
+
+- [x] Đổi tên hiển thị thành Liêm RAS Studio, giữ khóa dữ liệu cũ.
+- [x] Nâng cấp vật liệu/ánh sáng và animation minh họa 3D; hỗ trợ giảm chuyển động.
+- [x] Cột phải gọn, cuộn độc lập và mở/thu gọn toàn bộ nhóm.
+- [x] Màn hình nhỏ dùng ngăn thuộc tính bên phải thay vì đẩy xuống dưới.
+- [ ] Kiểm tra hình ảnh WebGL trên thiết bị thật (trình duyệt QA chỉ có SVG tương thích).
