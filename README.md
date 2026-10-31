@@ -156,3 +156,18 @@ Hỗ trợ WebGL và SVG tương thích; tay nắm giữ vị trí trên đầu 
 - Bảng cân bằng nước báo tốc độ tăng/giảm theo tổng Q vào/ra tại mực nước hiện tại; đây không phải nghiệm vận hành ổn định. Chạy Mô phỏng để cập nhật các mức nước và dòng hai chiều theo thời gian. Không kết luận đạt/sức tải đầy đủ khi còn dòng ngược, ngừng, chưa giải được hoặc chưa cân bằng.
 - Giới hạn: giả sử ống đầy, bể hở, không tự mồi siphon, khí kẹt, quán tính/CFD, dòng không đầy hoặc tổn thất qua thiết bị ngoài K đã nhập. Q tức thời lớn ở các bể nhỏ sẽ giảm nhanh khi cân bằng mực nước; không lấy Q đó làm lưu lượng tuần hoàn ổn định. Các nhánh hiện là các ống riêng nối bể, không phải mô hình thủy lực manifold/T có áp.
 - Tham khảo: [US EPA — EPANET](https://www.epa.gov/water-research/epanet), [hướng dòng theo cột áp và tổn thất](https://github.com/EPANET-Project/epanet-manual/blob/dev/docs/3_network_model.rst). Đây là bộ tính giản lược của ứng dụng, không tích hợp engine EPANET.
+
+### Ống đứng chống cạn bên trong thùng
+- Chọn ống tự chảy/xả → **Ống đứng chống cạn** → bật ở A hoặc B. Module gắn riêng vào một đầu tuyến, không tự bảo vệ các đường xả khác.
+- Miệng ống đặt từ cao độ cửa nối đến mép thùng. Trong 3D kéo tay nắm vàng **Ống đứng A/B**; ↑/↓ chỉnh 1 cm, Shift chỉnh 10 cm. Không thay đổi mực nước hiện tại khi kéo; mô phỏng tính nước giữ lại và dòng xả.
+- Mô hình miệng hở, thông khí: Q tràn xấp xỉ `1.7 × πD × H^1.5` m³/s, với H là độ ngập trên miệng; giới hạn thêm bởi năng lực đường ống phía sau. Cw=1.7 là hệ số giả định, chưa hiệu chuẩn cho sản phẩm/miệng ống thực và không dùng làm thiết kế thi công. Giữ lại chiều dài đoạn trong thùng khi tính tổn thất.
+- Nước không tự xả qua miệng khi thấp hơn crest; nước từ bể bên kia đủ cột áp vẫn có thể chảy ngược qua miệng. Không mô hình bell siphon/ống kín hút xuống đáy. Mức vận hành khi có nước vào thường cao hơn miệng để tạo cột nước tràn, không được xem miệng là bộ khóa mực nước tuyệt đối.
+- JSON/mô hình cũ vẫn đọc được, không cần chuyển schema; các trường `fromStandpipe`/`toStandpipe` là tùy chọn.
+
+### Tài khoản sau khi cập nhật web
+- Giữ nguyên IndexedDB `ras-studio-private-v1` (version 1) và các khóa mã hóa, không xóa tài khoản khi deploy. Phiên Local cố ý kết thúc khi tải lại vì khóa giải mã chỉ ở bộ nhớ; đây không phải xóa tài khoản.
+- Đã có tài khoản Local thì ưu tiên đúng nơi lưu đó; ghim lựa chọn Local/Firebase và không tự đổi sau khi cấu hình dịch vụ thay đổi. Trang đăng nhập hiển thị số tài khoản trên origin hiện tại, nhớ tên đăng nhập và có nút yêu cầu lưu trữ bền vững (trình duyệt quyết định việc cấp quyền).
+- Tài khoản Local thuộc từng trình duyệt/profile/origin, không nằm trong GitHub. Trình duyệt trong ứng dụng, Safari/Chrome hoặc máy khác có vùng lưu khác. Xóa dữ liệu trang/private mode hoặc trình duyệt thu hồi bộ nhớ có thể làm mất dữ liệu. Firebase chưa kích hoạt trên demo.
+- Mở Tài khoản → **Sao lưu tài khoản & mô hình mã hóa** tải `.rasvault`. Để chuyển máy: ở trang đăng nhập chọn **Khôi phục tài khoản từ bản sao lưu mã hóa**, dùng mật khẩu gốc. Không chứa mật khẩu/khóa giải mã; vẫn có metadata tên đăng nhập/UID. Không ghi đè tài khoản/mô hình đang có; kiểm tra mật khẩu và toàn bộ ciphertext trước khi ghi một giao dịch nguyên tử.
+- File JSON thiết kế cũ chỉ khôi phục mô hình, không chứa tài khoản. Không thể khôi phục dữ liệu Local đã bị xóa nếu chưa có bản sao lưu.
+- Tài liệu nền: [MDN — Storage quotas and eviction](https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria), [USBR — Weir head](https://www.usbr.gov/tsc/techreferences/mands/wmm/chap07_05.html).
