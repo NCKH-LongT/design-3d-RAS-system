@@ -1,3 +1,4 @@
+import {standpipe,standpipePath} from './standpipe.js';
 import {analyzeHydraulics} from './hydraulics.js';
 import {createPipeHeightControls} from './pipe-height-controls.js';
 import{TYPES,route,route3D}from'./model.js';
@@ -19,6 +20,7 @@ export function createFallback3D(root,onSelect,onEdit){let selected,project,proj
  }
  let pipes='';for(const e of project.edges){const flow=hydraulic.edges.find(f=>f.id===e.id);const a=project.nodes.find(n=>n.id===e.from),b=project.nodes.find(n=>n.id===e.to),points=route3D(project,e).map(p=>[p.x,p.z,p.y]);pipes+=`<polyline data-pick="${escape(e.id)}" points="${pts(points)}" fill="none" stroke="${flow.state==='reverse'?'#c26b4b':flow.state==='stopped'?'#c8a765':flow.state==='unsupported'?'#999e9d':e.mode==='air'?'#a292c2':e.mode==='pressure'?'#507fae':'#5b9fa0'}" stroke-width="${Math.max(1.5,e.diameter/1000*scale)}" stroke-linejoin="round" opacity="${e.open?1:.3}"/>`;}
  for(const e of project.edges.filter(e=>Math.abs(hydraulic.edges.find(f=>f.id===e.id).q)>1e-7)){const flow=hydraulic.edges.find(f=>f.id===e.id);const points=route3D(project,e).map(p=>[p.x,p.z,p.y]);pipes+=`<polyline class="flow-pulse" data-flow-edge="${escape(e.id)}" data-flow-direction="${flow.direction}" style="animation-duration:${Math.max(.08,34/(flow.velocity*scale))}s;animation-direction:${flow.q<0?'reverse':'normal'}" points="${pts(points)}" fill="none" stroke="#d0fff0" stroke-width="2" stroke-dasharray="3 14" pointer-events="none"/>`;}
+ for(const e of project.edges)for(const end of ['from','to']){const sp=standpipe(project,e,end);if(!sp)continue;const path=standpipePath(project,e,end),points=path.map(v=>[v.x,v.z,v.y]),q=raw(points.at(-1));pipes+=`<polyline data-pick="${escape(e.id)}" points="${pts(points)}" fill="none" stroke="#c68c23" stroke-width="${Math.max(4,e.diameter/1000*scale)}" stroke-linejoin="round"/><circle data-pick="${escape(e.id)}" cx="${q[0]}" cy="${q[1]}" r="4" fill="#fff4c9" stroke="#b68220"/><text x="${q[0]+7}" y="${q[1]-7}" font-size="9" fill="#946314" paint-order="stroke" stroke="#fff" stroke-width="2" pointer-events="none">Ống đứng ${sp.height.toFixed(2)} m</text>`;}
  surfaces.sort((a,b)=>a.depth-b.depth);svg.innerHTML=`<rect width="100%" height="100%" fill="#f0f4e9"/>${base}${grid}${surfaces.map(s=>s.html).join('')}${pipes}${labels.join('')}<text x="16" y="${H-48}" font-size="9" fill="#8e9d84">3D sơ đồ · Kéo ngang để xoay, kéo dọc để đổi góc nhìn</text>`;
  heightControls.update(project,selected);
  }
