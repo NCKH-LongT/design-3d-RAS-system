@@ -1,135 +1,133 @@
-# RAS Studio
+# RAS Studio 1.2
 
 **Demo:** https://nckh-longt.github.io/design-3d-RAS-system/
 
-Ứng dụng web tiếng Việt để bố trí hệ nuôi cá tuần hoàn (RAS), chỉnh thiết bị/đường ống và sàng lọc các giới hạn vận hành. Mặt bằng 2D, hai chế độ xem 3D và bộ tính dùng chung một dự án JSON.
+Web tiếng Việt để thiết kế hệ RAS bằng kéo thả 2D, kiểm tra 3D, tính tải nuôi và mô phỏng các kịch bản vận hành. Đăng nhập trước khi mở editor; mỗi tài khoản quản lý nhiều mô hình.
 
-![Giao diện RAS Studio](docs/preview.jpg)
+## Bắt đầu
 
-## Chức năng đã có
+1. Mở demo, chọn **Đăng ký** ở lần dùng đầu tiên.
+2. Mặc định dùng tài khoản **trên máy này**: tên đăng nhập, mật khẩu ít nhất 8 ký tự và tên hiển thị. Không có tài khoản/mật khẩu dùng chung.
+3. Sau đăng nhập, dùng **Mô hình của tôi** để tạo mới, mở, đổi tên, nhân bản, lưu trữ hoặc khôi phục.
+4. Kéo thiết bị từ thư viện, nối các cổng tròn và nhập kích thước/cao độ/thông số thực tế.
+5. Xem kết luận đầu màn hình; bấm **Xem lý do** để biết giới hạn đã vượt và dữ liệu thiếu.
+6. Dùng **Mô phỏng** để thử vận hành bình thường, tắt bơm, tắt khí, mất điện, thiếu vi sinh hoặc dừng lọc cặn.
 
-- Kéo thiết bị vào mặt bằng hoặc nhấn để thêm; di chuyển trên lưới 5 cm, xoay, nhân bản, xóa.
-- 9 loại: bể tròn, bể chữ nhật, bể lắng, drum filter, lọc vi sinh, bồn bơm, bơm nước, máy sục khí và tháp khử khí.
-- Chỉnh kích thước, cao độ đáy, mực nước, vị trí và thông số thiết bị.
-- Nối hai cổng để tạo tuyến có hướng; chỉnh đường kính **trong**, loại tuyến, chiều dài bổ sung, hệ số K phụ kiện và trạng thái van.
-- Kéo điểm gấp trên tuyến đang chọn; chiều dài cập nhật khi di chuyển thiết bị.
-- Phân biệt nước tự chảy, nước có áp, đường khí và xả cặn; kết nối nhiều nhánh tại cùng cổng.
-- 3D WebGL bằng Three.js; tự chuyển sang hình chiếu 3D SVG có thể xoay khi WebGL không khả dụng.
-- Tính thể tích nước, sinh khối, thức ăn, tải TAN-N, giới hạn vi sinh/oxy/mật độ với dự phòng, điện năng và chi phí điện.
-- Ước tính điểm làm việc một tuyến đẩy nối tiếp theo đường bơm parabol và Darcy–Weisbach.
-- Chỉ tính năng lực vi sinh trong vòng tuần hoàn kín của bể nuôi. Đóng van có thể loại thiết bị khỏi bộ tính.
-- Tự lưu trên trình duyệt; mở/xuất JSON có kiểm tra dữ liệu; xuất danh mục thiết bị và từng tuyến ống CSV UTF-8; hoàn tác/làm lại.
-- Giao diện responsive, hướng dẫn, phương pháp và cảnh báo dữ liệu thiếu ngay trong ứng dụng.
+## Tài khoản & nơi lưu dữ liệu
 
-## Chạy trên máy
+| Chế độ | Tài khoản | Mô hình | Phạm vi |
+| --- | --- | --- | --- |
+| Lưu trên máy (mặc định) | IndexedDB, xác minh bằng bản kiểm tra mã hóa | AES-256-GCM, khóa từ mật khẩu qua PBKDF2-SHA256, 600.000 vòng, salt riêng | Chỉ trình duyệt và origin đang dùng, không đồng bộ |
+| Firebase (tùy cấu hình) | Firebase Authentication, email/mật khẩu | Firestore dưới `users/{uid}/projects/{id}` | Đồng bộ theo tài khoản qua mạng |
 
-Yêu cầu Node.js 22 trở lên và npm.
+Khóa giải mã cục bộ chỉ ở bộ nhớ phiên, không lưu mật khẩu hay khóa thô vào Git/localStorage/IndexedDB. Đăng xuất hoặc tải lại trang yêu cầu đăng nhập lại. Mỗi lần mã hóa dùng IV ngẫu nhiên mới và ràng buộc UID/ID mô hình làm additional authenticated data. Model và tên model không lưu dạng rõ trong IndexedDB.
+
+**Lưu trên máy không có khôi phục mật khẩu.** Quên mật khẩu hoặc xóa dữ liệu trình duyệt có thể làm mất mô hình. Hãy xuất JSON để sao lưu; JSON xuất ra là bản thiết kế **không mã hóa**, không chứa mật khẩu tài khoản. Đổi máy/trình duyệt không thấy mô hình cục bộ; cần nhập JSON hoặc bật Firebase. Bản nháp trước 1.2 chỉ được nhập vào tài khoản khi người dùng chủ động chọn, không tự nhận sở hữu.
+
+GitHub Pages chỉ phục vụ file tĩnh, không chạy SQLite/database phía server. Không lưu mật khẩu hoặc database tài khoản dạng rõ vào repository. Mã nguồn và bundle vẫn công khai; điều được bảo vệ là dữ liệu mô hình qua mã hóa cục bộ hoặc quyền Firebase. Đây không phải cơ chế giới hạn ai được xem mã nguồn website.
+
+Firebase đã có adapter và quy tắc được kiểm thử trên emulator, **chưa được kích hoạt trên demo**. Khi chưa có cấu hình, ứng dụng dùng lưu trữ cục bộ mã hóa. Hướng dẫn: [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md).
+
+## Trình thiết kế
+
+- 9 loại thiết bị: bể tròn/chữ nhật, lắng, drum, vi sinh, bồn bơm, bơm nước, máy khí, khử khí.
+- Di chuyển theo bước 5 cm; đổi kích thước, mực nước, cao độ đáy, xoay, nhân bản và xóa.
+- Nối cổng thành tuyến có hướng; chỉnh đường kính **trong**, loại tuyến, van, K và chiều dài bổ sung.
+- Hai đầu mỗi tuyến có cao độ riêng tính từ đáy thiết bị nguồn/đích. Hiển thị cao độ tuyệt đối, độ dốc, chiều dài 3D và dung tích ống.
+- 3D WebGL bằng Three.js; tự chuyển sang hình chiếu SVG có thể xoay nếu thiếu WebGL.
+- Nhập JSON tạo **mô hình mới**, không ghi đè mô hình đang mở. Xuất JSON và CSV danh mục thiết bị/tuyến ống.
+- Tự lưu theo mô hình, ghi tuần tự, giữ thay đổi chưa lưu khi lỗi, kiểm tra revision khi cùng sửa ở nhiều phiên. Có xung đột thì lưu thành bản sao; không tự ghi đè phiên khác.
+- Hoàn tác/làm lại chỉ trong mô hình đang mở, không trộn lịch sử giữa các mô hình.
+
+## Thu gọn và tập trung viewer
+
+- Các nút **Thư viện**, **Thuộc tính**, **Tổng quan** đóng/mở từng phần.
+- Nút × trên hai panel thu gọn nhanh; các nút mở lại luôn còn trong toolbar viewer.
+- **Tập trung** ẩn hai panel và phần tổng quan, mở rộng 2D/3D gần toàn màn hình.
+- Từng nhóm thông số, báo cáo và cấu hình mô phỏng có thể đóng/mở bằng tiêu đề.
+- Lựa chọn bố cục được nhớ trên trình duyệt, độc lập với dữ liệu mô hình.
+
+## Kết luận vận hành
+
+Kết luận được hiển thị ngay đầu màn hình và giải thích trong Phân tích hệ:
+
+- **Chưa đạt mục tiêu nuôi:** đã có giới hạn vượt hoặc kết nối/lưu lượng/bơm không đáp ứng; liệt kê nguyên nhân và hướng khắc phục định lượng khi có thể.
+- **Chưa đủ dữ liệu:** chưa có bằng chứng đạt/không đạt đầy đủ, ví dụ thiếu lưu lượng đo hoặc hiệu suất oxy thực.
+- **Đạt các kiểm tra sàng lọc:** các giới hạn đã mô hình hóa đáp ứng tải; không đồng nghĩa xác nhận toàn bộ hệ an toàn hoặc hiệu quả ngoài thực tế.
+
+Một giới hạn đã vượt vẫn được kết luận chưa đạt dù thông số khác còn thiếu. Số cá tối đa chỉ hiện khi đủ vòng kín, thông số vi sinh/oxy và lưu lượng xác minh đạt mục tiêu tuần hoàn. Các chỉ số tính theo trọng lượng thu hoạch, không chỉ trọng lượng cá giống.
+
+## Công thức chính
+
+| Đại lượng | Công thức / giả định |
+| --- | --- |
+| Bể tròn / hộp | V = πD²h/4 hoặc rộng × dài × h, với h là chiều sâu nước |
+| Sinh khối / thức ăn | Số cá × kg/con; thức ăn = sinh khối × tỷ lệ ăn/ngày |
+| TAN-N | kg thức ăn/ngày × g TAN-N/kg thức ăn |
+| Năng lực vi sinh | m³ giá thể × m² bề mặt bảo vệ/m³ × g TAN-N/m²/ngày; chỉ tính lọc thuộc vòng nước kín |
+| Oxy cá | Sinh khối × mg O₂/kg/h / 10⁶, kg/h |
+| Oxy nitrat hóa | kg TAN-N/ngày × 4,57 / 24, kg O₂/h |
+| Oxy tải hữu cơ | Thức ăn × kg O₂/100 kg thức ăn / 100 / 24 |
+| Oxy cấp | L khí/phút × 60/1000 × 0,279 kg O₂/m³ không khí × hiệu suất thực/100 |
+| Sức tải | Min(giới hạn mật độ, TAN, oxy) × (1 − dự phòng/100), chia kg mỗi con |
+| Độ dốc ống | (cao độ đầu A − cao độ đầu B) / chiều dài tuyến mặt bằng; dương là A cao hơn B |
+| Chiều dài 3D / dung tích ống | √(L mặt bằng² + Δz²) + L bổ sung; V = πD²L/4 |
+| Áp suất thủy tĩnh | p = ρgh, h là độ sâu đầu ống dưới mặt nước; ρ giả định 1000 kg/m³ |
+| Vận tốc / phản lực tia | v = Q/A; F = ρQv, không phải tổng lực lên thành bể/ống |
+| Tổn thất có áp | (fL/D + ΣK) v²/(2g), Darcy–Weisbach |
+| Đường bơm xấp xỉ | H = Hmax[1 − (Q/Qmax)²] |
+| Công suất thủy lực | P = ρgQH; hiệu suất suy ra = P/công suất điện nhập |
+
+Ống PVC nhám 0,0015 mm, độ nhớt động học 10⁻⁶ m²/s; f = 64/Re khi Re < 2300, Swamee–Jain ở giá trị lớn hơn (vùng chuyển tiếp chỉ xấp xỉ). K phụ kiện nhập thủ công. Độ dốc riêng lẻ không quyết định lưu lượng; còn phụ thuộc hai mực nước, đường kính, chiều dài, phụ kiện và điều kiện đầy/không đầy ống.
+
+Nhiệt độ, pH, độ mặn và % đạm được ghi nhận, chưa tự hiệu chỉnh các hệ số; người dùng phải nhập hệ số phù hợp. Hệ số mẫu không phải khuyến cáo cho một loài cá.
+
+## Mô phỏng theo thời gian
+
+Mô phỏng chạy trong Web Worker và không sửa thiết kế gốc:
+
+- Mỗi bể có dung tích, mực nước và lượng nước riêng; dòng đi theo các tuyến đang mở và cao độ cửa.
+- Tuyến tự chảy giả định đầy ống, giải lưu lượng từ chênh cột nước và Darcy–Weisbach; chưa giải dòng không đầy, khí cuốn, siphon hoặc chi tiết co T thực.
+- Một bơm với tuyến hút và đẩy nối tiếp; tính điểm làm việc theo hai mặt nước động. Không cộng thêm cột áp tĩnh cấu hình vào chênh mặt nước động để tránh đếm hai lần.
+- Dừng dòng bơm mô phỏng khi đầu hút hở; thiết bị thật không được coi là tự có bảo vệ chạy khô.
+- Giới hạn dòng ra theo lượng nước còn trên cửa, cộng nước bù theo giới hạn tốc độ vào bồn bơm, tính nước xả và nước tràn. Kiểm tra sai số bảo toàn lượng nước.
+- Bước thích ứng tối đa 2 giây, giảm bước khi cần theo biến thiên mực nước; đây vẫn là mô hình số giản lược, không CFD.
+- Thay hệ số số cá và thức ăn; tắt bơm/khí/lọc cặn/vi sinh; quan sát biểu đồ và phát lại mức nước theo thời gian.
+- TAN-N và cặn là cân bằng khối lượng gộp toàn hệ. Hiệu quả lọc cặn, tỷ lệ cặn từ thức ăn, hoạt tính ban đầu và bán rã vi sinh do người dùng nhập.
+- DO chỉ dự báo khi biết hiệu suất oxy thực, hoặc trong kịch bản chủ động tắt khí. Oxy cần cho cá, tải hữu cơ và TAN thực được xử lý. Trần DO là đầu vào giả định, chưa tính bão hòa tự động theo nhiệt độ/độ mặn.
+- Vi sinh giảm hoạt tính dần nếu thiếu cơ chất hoặc oxy theo bán rã kịch bản; **nước sạch không làm vi sinh chết ngay**. Không suy ra chính xác sinh khối/loài vi khuẩn từ thông số này.
+
+Ngưỡng TAN/DO/cặn trong kịch bản là ngưỡng người dùng nhập. TAN-N chưa được chuyển sang NH₃ độc; chưa tính NO₂, NO₃, CO₂, tắc lọc, NPSH, luồng oxy riêng mỗi bể, đảo giá thể hay thời gian sống của cá. Không có cảnh báo trong một kịch bản không chứng minh an toàn ở mọi điều kiện.
+
+## Chạy và kiểm thử
+
+Node.js 22+, npm. Kiểm thử quy tắc Firestore cần Java 21+.
 
 ```bash
 npm ci
 npm run dev
-```
-
-```bash
 npm test
+npm run test:rules
 npm run build
-npm run preview
 ```
 
-Build tĩnh nằm trong `dist/`. Không cần backend, database hoặc API key. Font Be Vietnam Pro tải từ Google Fonts; có font hệ thống dự phòng.
+- 27 unit tests: hình học/ống/bơm, TAN/oxy, kết luận, cân bằng nước, sự cố, quan hệ số cá–TAN, suy giảm vi sinh, lưu tuần tự/xung đột, đăng nhập và mã hóa IndexedDB.
+- 3 Firestore emulator tests: quyền sở hữu, chặn khách/tài khoản khác, revision/schema, lưu trữ và cấm xóa vĩnh viễn, giới hạn dung lượng.
+- Build kiểm tra không có fixture đăng nhập QA trong production và không có service-account credentials trong cấu hình public.
+- UI kiểm thử với backend fixture chỉ cho development: chuyển nhiều mô hình, thu gọn/focus, mô phỏng, biểu đồ và cảnh báo. Fixture không được đưa vào production.
+- `npm audit --omit=dev`: không có lỗ hổng trong phụ thuộc production tại lần kiểm tra. Firebase CLI là công cụ dev, không được đưa vào bundle web.
 
-## Triển khai GitHub Pages
+Phím: V chọn; P nối ống; Esc hủy; Delete xóa; Ctrl/Cmd+Z hoàn tác; Ctrl/Cmd+Shift+Z làm lại. Cuộn zoom 2D; Shift+cuộn dịch ngang; Alt+cuộn dịch dọc.
 
-Workflow `.github/workflows/pages.yml` kiểm thử, build và deploy từ nhánh `main`. Trong Settings → Pages, chọn Source là **GitHub Actions**. Workflow đặt `GITHUB_PAGES=true` để build đúng base `/design-3d-RAS-system/`; các nền tảng khác vẫn dùng `/`.
+## Deploy
 
-```bash
-GITHUB_PAGES=true npm run build
-```
+GitHub Pages dùng `.github/workflows/pages.yml`, nhánh `main`, `GITHUB_PAGES=true`, base `/design-3d-RAS-system/`. Vercel vẫn có cấu hình build tĩnh trong `vercel.json`, base mặc định `/`. Không cần biến môi trường để dùng lưu trữ cục bộ. Cấu hình Firebase web public nếu dùng cloud đặt tại `public/firebase-config.json`; không chứa admin key.
 
-Đã deploy và xác minh giao diện 2D/3D tại [demo GitHub Pages](https://nckh-longt.github.io/design-3d-RAS-system/). Push lên `main` sẽ tự cập nhật demo sau khi workflow thành công.
+## Tài liệu
 
-## Triển khai Vercel
-
-Repository đã có `vercel.json`:
-
-- Framework: Vite.
-- Install: `npm ci` (tự nhận từ lockfile).
-- Build: `npm run build`.
-- Output: `dist`.
-- Root: thư mục gốc repository.
-- Không cần biến môi trường.
-
-Import repository `NCKH-LongT/design-3d-RAS-system` trong tài khoản/team Vercel mong muốn, chọn nhánh `main` và Deploy. Có thể chạy `vercel --prod` trong checkout đã được xác thực. Không đưa token Vercel vào source hoặc `vercel.json`.
-
-**Trạng thái:** demo hiện chạy trên GitHub Pages; chưa triển khai Vercel. Xem [checklist.md](checklist.md).
-
-## Hướng dẫn nhanh
-
-1. Bắt đầu từ hệ mẫu hoặc Dự án trống.
-2. Kéo bể và cụm lọc vào mặt bằng; nhập kích thước thật và mực nước làm việc.
-3. Nhấn cổng ra rồi cổng vào để nối tuyến. Nhấn ống để chỉnh đường kính trong, loại và van.
-4. Nhập lượng giá thể theo lít, bề mặt được bảo vệ và tốc độ xử lý TAN đã xác minh.
-5. Nhập khí tại áp suất làm việc và hiệu suất truyền oxy thực ở thiết bị sục. Giá trị 0 biểu thị chưa có dữ liệu.
-6. Trong Cấu hình nuôi, nhập số cá, trọng lượng mục tiêu, tỷ lệ ăn và lưu lượng nước đo/xác minh.
-7. Xem Phân tích hệ để kiểm tra các giới hạn và dữ liệu còn thiếu. Lưu JSON để chuyển máy hoặc sao lưu.
-
-Phím tắt: `V` chọn, `P` nối ống, `Esc` hủy nối, `Delete` xóa; `Ctrl/Cmd+Z` hoàn tác, `Ctrl/Cmd+Shift+Z` làm lại. Cuộn để zoom 2D; Shift+cuộn dịch ngang, Alt+cuộn dịch dọc. Trong 3D kéo để xoay.
-
-## Phương pháp tính
-
-| Đại lượng | Công thức / điều kiện |
-| --- | --- |
-| Bể tròn | V = πD²h / 4; h là chiều sâu nước |
-| Bể chữ nhật | V = rộng × dài × h |
-| Sinh khối | N × trọng lượng thu hoạch kg/con |
-| Thức ăn | Sinh khối × tỷ lệ ăn (%)/100, kg/ngày |
-| TAN-N | Thức ăn × hệ số g TAN-N/kg thức ăn |
-| Năng lực vi sinh | m³ giá thể × m² bề mặt bảo vệ/m³ × g TAN-N/m²/ngày |
-| Oxy cá | Sinh khối × mg O₂/kg/h / 10⁶ |
-| Oxy nitrat hóa | kg TAN-N/ngày × 4,57 / 24 |
-| Oxy hữu cơ | Thức ăn × hệ số kg O₂/100 kg thức ăn / 100 / 24 |
-| Oxy cấp | L khí/phút × 60/1000 × 0,279 kg O₂/m³ không khí × hiệu suất thực/100 |
-| Sức tải sàng lọc | Min(giới hạn mật độ, TAN, oxy) × (1 − dự phòng/100) / kg mỗi con |
-| Tổn thất có áp | (fL/D + ΣK) × v²/(2g) |
-| Đường bơm xấp xỉ | H = Hmax × [1 − (Q/Qmax)²] |
-
-Nhiệt độ, pH, độ mặn và % đạm hiện được ghi nhận, **chưa tự hiệu chỉnh** các hệ số. Hệ số mẫu không phải khuyến cáo riêng cho một loài cá. Lưu lượng bằng 0, thiếu dữ liệu oxy/vi sinh, thiếu vòng kín hoặc lưu lượng xác minh dưới mục tiêu tuần hoàn sẽ chặn hiển thị số cá.
-
-Tính ống dùng độ nhám PVC 0,0015 mm, độ nhớt động học 10⁻⁶ m²/s; f = 64/Re khi Re < 2300, Swamee–Jain ở giá trị lớn hơn. Vùng chuyển tiếp chỉ được xấp xỉ. Chiều dài tuyến = chiều dài mặt bằng trực giao + chênh cao tâm nước hai thiết bị + phần bổ sung. Cột áp tĩnh do người dùng khai báo theo chênh cao mặt nước nguồn và nhận. K là đầu vào thủ công, chưa tự đếm co/T/van.
-
-## Giới hạn cần biết
-
-- Đây là công cụ sàng lọc thiết kế, **chưa phải chứng nhận sức tải hoặc bản vẽ thi công**.
-- Chưa giải mạng tự chảy đầy/không đầy ống, phân phối lưu lượng song song, cao độ mực nước, đường hút/NPSH, nhiều bơm hay tổn thất của từng thiết bị lọc.
-- Sức tải hiển thị là giới hạn theo ba mô hình gộp, chưa xét riêng từng bể, phân phối khí, đỉnh tiêu thụ oxy, khả năng đảo giá thể, CO₂, NO₂/NO₃ hoặc tăng trưởng cá theo thời gian.
-- Máy khí phải có đường khí đang mở trực tiếp tới bể nuôi để được tính. Chưa hỗ trợ riêng các đầu sục trong lọc vi sinh hoặc oxygen cone.
-- Công suất drum chỉ đối chiếu sơ bộ với tổng lưu lượng khai báo; tháp khử khí hiện là thiết bị bố trí, chưa tính năng lực loại CO₂.
-- Chưa có mô phỏng tắc lọc, nước hồi/cạn bồn khi mất điện, hút ngược, dự phòng oxy hoặc xác định thời gian an toàn khi ngừng thiết bị.
-- Van được biểu diễn bằng trạng thái của tuyến; co/T/thu cỡ chưa là đối tượng CAD riêng. Hệ số tổn thất và chiều dài bổ sung nhập trong thuộc tính ống.
-- Dữ liệu lưu trên trình duyệt, không đồng bộ tài khoản. 3D chỉ phản ánh bố trí và kích thước, không phải CFD.
-
-## Cấu trúc mã
-
-```text
-src/model.js             Schema, thiết bị mẫu, cổng, tuyến, kiểm tra JSON
-src/calc.js              Thể tích, TAN, oxy, sức tải, đường bơm và tổn thất
-src/app.js               Trình thiết kế SVG, bảng thông số, lưu/mở và xuất CSV
-src/view3d.js            Hiển thị WebGL, chọn thiết bị, camera
-src/view3d-fallback.js   Hình chiếu 3D SVG khi không có WebGL
-src/style.css           Giao diện và responsive
-tests/calc.test.js      Kiểm thử tính toán và dữ liệu
-vercel.json             Cấu hình triển khai tĩnh
-```
-
-## Kiểm thử
-
-`npm test` kiểm tra thể tích bể tròn, chiều biến thiên tổn thất, tải TAN, thiếu oxy, thiếu lưu lượng, ngắt vòng tuần hoàn, loại lọc rời khỏi sức tải, giao điểm đường bơm, chặn tuyến đẩy phân nhánh và kiểm tra JSON nhập. GitHub Actions chạy test và build khi push hoặc mở PR.
-
-Kiểm thử giao diện thực hiện qua trình duyệt: sửa kích thước và tính lại thể tích, kéo bể, thêm lọc, tạo ống bằng cổng, đổi đường kính, đóng van, phân tích hệ hoàn tác, nhập/xuất JSON và CSV. WebGL không khả dụng trên trình duyệt kiểm thử; chế độ 3D SVG được kiểm tra thay thế. WebGL chính đã qua build, chưa được kiểm chứng trực quan trong môi trường có GPU.
-
-## Tham khảo
-
+- [Checklist](checklist.md)
+- [Firebase setup](docs/FIREBASE_SETUP.md)
 - [US EPA — EPANET](https://www.epa.gov/water-research/epanet)
-- [FAO — Recirculating systems and re-use of water in aquaculture](https://www.fao.org/4/x5744e/x5744e0g.htm)
-
-Theo dõi công việc và phạm vi mở rộng trong [checklist.md](checklist.md).
+- [FAO — Recirculating systems](https://www.fao.org/4/x5744e/x5744e0g.htm)
+- [Firebase password authentication](https://firebase.google.com/docs/auth/web/password-auth)
+- [Firestore security rules](https://firebase.google.com/docs/firestore/security/rules-conditions)

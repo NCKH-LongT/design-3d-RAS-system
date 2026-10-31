@@ -3,3 +3,7 @@ dist/
 .vercel/
 .env*
 !.env.example
+
+.firebase/
+*-debug.log
+*.log

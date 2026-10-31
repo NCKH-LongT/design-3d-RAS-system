@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    function validModel(uid) {
+      let d = request.resource.data;
+      return d.keys().hasAll(['ownerUid', 'schemaVersion', 'name', 'model', 'revision', 'archived', 'createdAt', 'updatedAt'])
+        && d.keys().hasOnly(['ownerUid', 'schemaVersion', 'name', 'model', 'revision', 'archived', 'createdAt', 'updatedAt'])
+        && d.ownerUid == uid
+        && d.schemaVersion == 1
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 120
+        && d.model is string && d.model.size() <= 700000
+        && d.revision is int && d.revision > 0 && d.revision < 1000000000
+        && d.archived is bool
+        && d.createdAt is timestamp && d.updatedAt == request.time;
+    }
+    match /users/{uid}/projects/{projectId} {
+      allow read: if owner(uid);
+      allow create: if owner(uid) && validModel(uid)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.revision == 1;
+      allow update: if owner(uid) && validModel(uid)
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.revision == resource.data.revision + 1;
+      allow delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
