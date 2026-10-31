@@ -2,6 +2,8 @@
 
 **Demo:** https://nckh-longt.github.io/design-3d-RAS-system/
 
+![Màn hình đăng nhập bản 1.2](docs/auth-v12.jpg)
+
 Web tiếng Việt để thiết kế hệ RAS bằng kéo thả 2D, kiểm tra 3D, tính tải nuôi và mô phỏng các kịch bản vận hành. Đăng nhập trước khi mở editor; mỗi tài khoản quản lý nhiều mô hình.
 
 ## Bắt đầu

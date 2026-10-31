@@ -49,7 +49,7 @@
 - [x] Mô phỏng TAN-N, DO, cặn, hoạt tính vi sinh theo giả định; thay số cá/thức ăn; biểu đồ và phát lại diễn biến.
 - [x] 27 unit tests đạt; 3 Firestore emulator tests đạt; kiểm tra build không chứa QA login hoặc admin credential.
 - [x] Kiểm thử UI development: nhiều mô hình, chuyển mô hình, thu gọn/focus, kết luận, mô phỏng vận hành/mất điện.
-- [ ] Deploy và xác minh bản 1.2 trên GitHub Pages.
+- [x] Deploy và xác minh bản 1.2 trên GitHub Pages: màn hình đăng nhập cục bộ hiển thị, editor không mở khi chưa xác thực. CI kiểm thử ứng dụng và quy tắc Firestore đều thành công.
 
 ## Những giới hạn còn lại
 
