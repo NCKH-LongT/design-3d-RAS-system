@@ -1,4 +1,4 @@
-# RAS Studio 1.2
+# Liêm RAS Studio 1.2
 
 **Demo:** https://nckh-longt.github.io/design-3d-RAS-system/
 
@@ -133,3 +133,9 @@ GitHub Pages dùng `.github/workflows/pages.yml`, nhánh `main`, `GITHUB_PAGES=t
 - [FAO — Recirculating systems](https://www.fao.org/4/x5744e/x5744e0g.htm)
 - [Firebase password authentication](https://firebase.google.com/docs/auth/web/password-auth)
 - [Firestore security rules](https://firebase.google.com/docs/firestore/security/rules-conditions)
+
+### Cập nhật nhận diện & viewer
+- Tên hiển thị: **Liêm RAS Studio**; giữ nguyên định danh dữ liệu để tài khoản/mô hình cũ tiếp tục dùng được.
+- 3D WebGL: vật liệu, ánh sáng, đáy bể, gợn nước, bong bóng ở bể có kết nối khí trực tiếp và dấu dòng chảy trên tuyến đang mở. Chuyển động chỉ minh họa, không xác nhận bơm đang chạy hoặc biểu diễn lưu lượng tính toán.
+- 3D tương thích: dòng chảy và gợn nước SVG; tôn trọng cài đặt giảm chuyển động.
+- Cột phải cuộn độc lập, có Mở tất cả/Thu gọn; trên màn hình nhỏ chuyển thành ngăn nổi bên phải thay vì dồn xuống dưới viewer.
