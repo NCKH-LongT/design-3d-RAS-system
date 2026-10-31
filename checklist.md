@@ -64,3 +64,8 @@
 - [x] Cột phải gọn, cuộn độc lập và mở/thu gọn toàn bộ nhóm.
 - [x] Màn hình nhỏ dùng ngăn thuộc tính bên phải thay vì đẩy xuống dưới.
 - [ ] Kiểm tra hình ảnh WebGL trên thiết bị thật (trình duyệt QA chỉ có SVG tương thích).
+
+- [x] Chọn ống và nâng hạ riêng đầu A/B trực tiếp trong 3D WebGL/SVG.
+- [x] Cao độ, độ dốc và chiều dài cập nhật ngay; lưu khi thả và hoàn tác một lần kéo.
+- [x] Kiểm tra trình duyệt SVG: kéo A từ 0,40 lên 1,32 m, Ctrl+Z trả về 0,40 m; đầu B chỉnh được bằng bàn phím.
+- [ ] Kiểm tra tay nắm WebGL trên thiết bị thật (QA không hỗ trợ WebGL).
