@@ -146,3 +146,13 @@ GitHub Pages dùng `.github/workflows/pages.yml`, nhánh `main`, `GITHUB_PAGES=t
 3. Dùng ↑/↓ để tăng/giảm 1 cm, Shift + ↑/↓ để chỉnh 10 cm. Thông số số học vẫn chỉnh được bên phải.
 4. Độ dốc/chiều dài/tính toán cập nhật ngay; thả tay để lưu, Ctrl+Z hoàn tác cả lần kéo. Escape hoặc hủy con trỏ trả lại giá trị đầu lần kéo.
 Hỗ trợ WebGL và SVG tương thích; tay nắm giữ vị trí trên đầu ống khi xoay góc nhìn. Giới hạn cao độ tương đối 0–100 m giống trường nhập số; người dùng cần kiểm tra vị trí cửa so với thành bể.
+
+### Thủy lực theo cột áp và chiều dòng thực
+- Một bộ tính chung cho bảng Thủy lực, thuộc tính ống, animation 2D/3D và mô phỏng theo thời gian. A/B là chiều nối thiết kế; lưu lượng có dấu, không ép nước đi theo chiều nối.
+- Bể hở: H = cao độ đáy + độ sâu nước. Xét cửa hút ngập nước và cửa nhận; ΔH = Hnguồn − max(Hbể nhận, zcửa nhận). Giải Darcy–Weisbach + K phụ kiện + 1 hệ số năng lượng đầu ra, Q = Av. Dùng độ nhám PVC 0,0015 mm, ν = 10⁻⁶ m²/s và ρ = 1000 kg/m³; cần hiệu chỉnh theo vật liệu, nhiệt độ, độ mặn thực. Vùng chuyển tiếp ma sát là xấp xỉ.
+- Hai mặt nước cùng cao độ không chảy chỉ vì ống dốc. Chênh cột áp đổi dấu có thể gây chảy ngược; cửa nhận quá cao hoặc cửa hút hở làm ngừng dòng. Cửa cấp chưa ngập đủ tiết diện được báo chưa tính được, không gán một Q chảy đầy.
+- Bơm: một tuyến hút/đẩy nối tiếp, giải giao đường parabol Q–H với chênh mặt nước/cửa nhận và tổn thất toàn tuyến. Trường `staticHead` cũ vẫn đọc được từ JSON nhưng không dùng để tránh cộng trùng cao độ. Chưa hỗ trợ nhiều bơm/T có áp, NPSH hoặc dòng hồi qua bơm tắt.
+- Hạt nước có chiều và tốc độ theo v = Q/A; Q = 0 không có animation nước. Đường khí không áp dụng Q nước. Bảng cho Q, v, cột áp, nguyên nhân; chọn ống xem áp suất tương đương, thông lượng động lượng ρQv và công suất ρgQH. ρQv không phải lực tổng trên thành/co ống.
+- Bảng cân bằng nước báo tốc độ tăng/giảm theo tổng Q vào/ra tại mực nước hiện tại; đây không phải nghiệm vận hành ổn định. Chạy Mô phỏng để cập nhật các mức nước và dòng hai chiều theo thời gian. Không kết luận đạt/sức tải đầy đủ khi còn dòng ngược, ngừng, chưa giải được hoặc chưa cân bằng.
+- Giới hạn: giả sử ống đầy, bể hở, không tự mồi siphon, khí kẹt, quán tính/CFD, dòng không đầy hoặc tổn thất qua thiết bị ngoài K đã nhập. Q tức thời lớn ở các bể nhỏ sẽ giảm nhanh khi cân bằng mực nước; không lấy Q đó làm lưu lượng tuần hoàn ổn định. Các nhánh hiện là các ống riêng nối bể, không phải mô hình thủy lực manifold/T có áp.
+- Tham khảo: [US EPA — EPANET](https://www.epa.gov/water-research/epanet), [hướng dòng theo cột áp và tổn thất](https://github.com/EPANET-Project/epanet-manual/blob/dev/docs/3_network_model.rst). Đây là bộ tính giản lược của ứng dụng, không tích hợp engine EPANET.
